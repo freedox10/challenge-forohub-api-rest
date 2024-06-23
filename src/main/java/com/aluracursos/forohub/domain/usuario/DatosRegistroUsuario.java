@@ -11,7 +11,7 @@ public record DatosRegistroUsuario(
         String nombre,
         @NotBlank
         @Email
-        String correoElectronico,
+        String email,
         @NotBlank
         String contrasenia,
         @NotNull

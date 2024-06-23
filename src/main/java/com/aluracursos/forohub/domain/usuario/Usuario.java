@@ -26,7 +26,7 @@ public class Usuario implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nombre;
-    private String correoElectronico;
+    private String email;
     private String contrasenia;
     @Enumerated(EnumType.STRING)
     private Rol rol;
@@ -34,7 +34,7 @@ public class Usuario implements UserDetails {
 
     public Usuario(DatosRegistroUsuario datosRegistroUsuario) {
         this.nombre = datosRegistroUsuario.nombre();
-        this.correoElectronico = datosRegistroUsuario.correoElectronico();
+        this.email = datosRegistroUsuario.email();
         this.contrasenia = datosRegistroUsuario.contrasenia();
         if (datosRegistroUsuario.rol() !=this.rol){
             this.rol = datosRegistroUsuario.rol();
@@ -53,7 +53,7 @@ public class Usuario implements UserDetails {
 
     @Override
     public String getUsername() {
-        return correoElectronico;
+        return email;
     }
 
     @Override

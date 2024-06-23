@@ -37,4 +37,7 @@ public class Topico {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "topico_id", referencedColumnName = "id")
     private List<Respuesta> respuestas;
+
+
+
 }

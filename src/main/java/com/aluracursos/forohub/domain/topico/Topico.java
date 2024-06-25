@@ -2,6 +2,7 @@ package com.aluracursos.forohub.domain.topico;
 
 import com.aluracursos.forohub.domain.curso.Curso;
 import com.aluracursos.forohub.domain.respuesta.Respuesta;
+import com.aluracursos.forohub.domain.usuario.DatosActualizarUsuario;
 import com.aluracursos.forohub.domain.usuario.Usuario;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,9 +26,9 @@ public class Topico {
     private String titulo;
     private String mensaje;
     @Column(name = "fecha_creacion")
-    private LocalDateTime fechaCreacion;
+    private LocalDateTime fechaCreacion = LocalDateTime.now();
     @Enumerated(EnumType.STRING)
-    private Estado estado;
+    private Estado estado = Estado.SIN_SOLUCION;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "autor_id")
     private Usuario autor;
@@ -38,6 +39,33 @@ public class Topico {
     @JoinColumn(name = "topico_id", referencedColumnName = "id")
     private List<Respuesta> respuestas;
 
+    public Topico(DatosRegistroTopico datosRegistroTopico, Usuario autor, Curso curso) {
+        this.titulo = datosRegistroTopico.titulo();
+        this.mensaje = datosRegistroTopico.mensaje();
+        this.autor = autor;
+        this.curso = curso;
+    }
 
+    public void actualizarDatos(DatosActualizarTopico datosActualizarTopico, Usuario autor, Curso curso) {
+        if (datosActualizarTopico.titulo() !=null){
+            this.titulo = datosActualizarTopico.titulo();
+        }
+        if (datosActualizarTopico.mensaje() !=null){
+            this.mensaje = datosActualizarTopico.mensaje();
+        }
+        if (datosActualizarTopico.estado() != this.estado){
+            this.estado = datosActualizarTopico.estado();
+        }
+        if (autor !=null){
+            this.autor = autor;
+        }
+        if (curso !=null){
+            this.curso = curso;
+        }
+    }
+
+    public void cerrarTopico() {
+        this.estado = Estado.CERRADO;
+    }
 
 }

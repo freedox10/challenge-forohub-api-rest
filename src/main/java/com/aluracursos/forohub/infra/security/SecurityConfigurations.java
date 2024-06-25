@@ -30,6 +30,7 @@ public class SecurityConfigurations {
                 .authorizeHttpRequests((authorize) -> {
                     authorize.requestMatchers(HttpMethod.POST,"/login").permitAll();
                     authorize.requestMatchers(HttpMethod.DELETE, "/usuarios").hasRole("ADMIN");
+                    authorize.requestMatchers(HttpMethod.DELETE, "/cursos").hasRole("ADMIN");
                     authorize.requestMatchers(HttpMethod.DELETE, "/topicos").hasRole("ADMIN");
                     authorize.requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll();
                     authorize.anyRequest().authenticated();

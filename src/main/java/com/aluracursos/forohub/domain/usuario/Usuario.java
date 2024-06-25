@@ -41,6 +41,21 @@ public class Usuario implements UserDetails {
         }
     }
 
+    public void actualizarDatos(DatosActualizarUsuario datosActualizarUsuario) {
+        if (datosActualizarUsuario.nombre() !=null){
+            this.nombre = datosActualizarUsuario.nombre();
+        }
+        if (datosActualizarUsuario.email() !=null){
+            this.email = datosActualizarUsuario.email();
+        }
+        if (datosActualizarUsuario.contrasenia() !=null){
+            this.contrasenia = datosActualizarUsuario.contrasenia();
+        }
+        if (datosActualizarUsuario.rol() !=null){
+            this.rol = datosActualizarUsuario.rol();
+        }
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(rol.toString()));

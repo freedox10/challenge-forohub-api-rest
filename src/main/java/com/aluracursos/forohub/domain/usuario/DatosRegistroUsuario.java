@@ -15,8 +15,6 @@ public record DatosRegistroUsuario(
         @NotBlank
         String contrasenia,
         @NotNull
-        Rol rol,
-        @NotNull
-        Perfil perfil
+        Rol rol
 ) {
 }

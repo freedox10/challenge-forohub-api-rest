@@ -1,18 +1,17 @@
 package com.aluracursos.forohub.domain.respuesta;
 
+import com.aluracursos.forohub.domain.topico.Estado;
 import com.aluracursos.forohub.domain.topico.Topico;
 import com.aluracursos.forohub.domain.usuario.Usuario;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Table(name = "respuestas")
 @Entity(name = "Respuesta")
 @Getter
+//@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
@@ -32,5 +31,16 @@ public class Respuesta {
     private Boolean solucion;
 
 
+    public Respuesta(DatosRegistroRespuesta datos, Topico topico, Usuario autor) {
+        this.mensaje = datos.mensaje();
+        this.topico = topico;
+        this.autor = autor;
+        this.solucion = datos.solucion();
+        if (datos.solucion()) {
+            this.topico.setEstado(Estado.SOLUCIONADO);
+        } else {
+            this.topico.setEstado(Estado.SIN_SOLUCION);
+        }
+    }
 
 }

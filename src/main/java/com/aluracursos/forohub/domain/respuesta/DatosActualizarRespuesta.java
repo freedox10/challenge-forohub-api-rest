@@ -5,19 +5,17 @@ import com.aluracursos.forohub.domain.usuario.Usuario;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDateTime;
-
-public record DatosRegistroRespuesta(
-        //Long id,
+public record DatosActualizarRespuesta(
+        @NotNull
+        Long id,
         @NotBlank
         String mensaje,
         @NotNull
-        Boolean solucion,
-        @NotNull
         Long topicoId,
-        @NotNull
-        Long autorId
         //LocalDateTime fechaCreacion,
-
+        @NotNull
+        Long autorId,
+        @NotNull
+        Boolean solucion
 ) {
 }

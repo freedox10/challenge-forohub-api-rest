@@ -2,7 +2,6 @@ package com.aluracursos.forohub.domain.topico;
 
 import com.aluracursos.forohub.domain.curso.Curso;
 import com.aluracursos.forohub.domain.respuesta.Respuesta;
-import com.aluracursos.forohub.domain.usuario.DatosActualizarUsuario;
 import com.aluracursos.forohub.domain.usuario.Usuario;
 import jakarta.persistence.*;
 import lombok.*;
@@ -64,6 +63,15 @@ public class Topico {
 
     public void cerrarTopico() {
         this.estado = Estado.CERRADO;
+    }
+
+    public void agregarRespuesta(Respuesta respuesta) {
+        this.respuestas.add(respuesta);
+        if (respuesta.getSolucion()) {
+            this.estado = Estado.SOLUCIONADO;
+        } else {
+            this.estado = Estado.SIN_SOLUCION;
+        }
     }
 
 }

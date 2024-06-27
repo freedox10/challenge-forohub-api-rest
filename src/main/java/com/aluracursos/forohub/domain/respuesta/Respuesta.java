@@ -24,22 +24,37 @@ public class Respuesta {
     @JoinColumn(name = "topico_id")
     private Topico topico;
     @Column(name = "fecha_creacion")
-    private LocalDateTime fechaCreacion;
+    private LocalDateTime fechaCreacion = LocalDateTime.now();
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "autor_id")
     private Usuario autor;
     private Boolean solucion;
 
 
-    public Respuesta(DatosRegistroRespuesta datos, Topico topico, Usuario autor) {
-        this.mensaje = datos.mensaje();
+    public Respuesta(DatosRegistroRespuesta datosRegistroRespuesta, Topico topico, Usuario autor) {
+        this.mensaje = datosRegistroRespuesta.mensaje();
+        this.solucion = datosRegistroRespuesta.solucion();
+        if (datosRegistroRespuesta.solucion()) {
+            topico.setEstado(Estado.SOLUCIONADO);
+        } else {
+            topico.setEstado(Estado.SIN_SOLUCION);
+        }
         this.topico = topico;
         this.autor = autor;
-        this.solucion = datos.solucion();
-        if (datos.solucion()) {
-            this.topico.setEstado(Estado.SOLUCIONADO);
-        } else {
-            this.topico.setEstado(Estado.SIN_SOLUCION);
+    }
+
+    public void actualizarDatos(DatosActualizarRespuesta datosActualizar, Topico topico, Usuario autor) {
+        if (datosActualizar.mensaje() != null) {
+            this.mensaje = datosActualizar.mensaje();
+        }
+        if (datosActualizar.solucion() != this.solucion) {
+            this.solucion = datosActualizar.solucion();
+        }
+        if (topico != null) {
+            this.topico = topico;
+        }
+        if (autor != null) {
+            this.autor = autor;
         }
     }
 

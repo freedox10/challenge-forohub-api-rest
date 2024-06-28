@@ -4,6 +4,8 @@ import com.aluracursos.forohub.domain.curso.Curso;
 import com.aluracursos.forohub.domain.curso.CursoRepository;
 import com.aluracursos.forohub.domain.topico.*;
 import com.aluracursos.forohub.domain.usuario.*;
+import com.aluracursos.forohub.infra.errores.ValidacionDeIntegridad;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,61 +32,65 @@ public class TopicoController {
     private UsuarioRepository usuarioRepository;
     @Autowired
     private CursoRepository cursoRepository;
+    @Autowired
+    private TopicoService service;
 
     @PostMapping
-    public ResponseEntity<DatosRespuestaTopico> registrarTopico(@RequestBody @Valid DatosRegistroTopico datosRegistroTopico,
-                                                                UriComponentsBuilder uriComponentsBuilder) {
+    @Transactional
+    //El @Operación la anotación se usa para describir una sola operación. Una operación es una combinación única de una ruta y un método HTTP.
+    @Operation(
+            summary = "registra un tópico",
+            description = "debe existir autor y curso",
+            tags = { "topico", "post" })
+    public ResponseEntity<DatosRespuestaTopico> registrarTopico(@RequestBody @Valid DatosRegistroTopico datosRegistroTopico) throws ValidacionDeIntegridad {
 
-        Usuario usuario = usuarioRepository.getReferenceById(datosRegistroTopico.autorId());
-        Curso curso = cursoRepository.getReferenceById(datosRegistroTopico.cursoId());
+        var response = service.registrarTopico(datosRegistroTopico);
+        return ResponseEntity.ok(response);
 
-        Topico topico = topicoRepository.save(new Topico(datosRegistroTopico, usuario, curso));
-
-        DatosRespuestaTopico datosRespuestaTopico = new DatosRespuestaTopico(topico);
-
-        URI url = uriComponentsBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
-
-        return ResponseEntity.created(url).body(datosRespuestaTopico);
-        // Return 201 Created
-        // URL donde encontrar al topico
-        // GET http://localhost:8080/topicos/xx
     }
 
     @GetMapping
     public ResponseEntity<Page<DatosListadoTopico>> listadoTopico(@PageableDefault(size = 10) @SortDefault(sort = "fechaCreacion",
             direction = Sort.Direction.ASC) Pageable paginacion) {
+        var response = service.listarTopicos(paginacion);
+        return ResponseEntity.ok(response);
+    }
 
-        return ResponseEntity.ok(topicoRepository.findAll(paginacion).map(DatosListadoTopico::new));
-//        return ResponseEntity.ok(usuarioRepository.findByActivoTrue(paginacion).map(DatosListadoUsuario::new));
+    @GetMapping("/estado/{estado}")
+    public ResponseEntity<Page<DatosListadoTopico>> listarTopicosPorEstado(
+            @PageableDefault(size = 10) Pageable paginacion, @PathVariable String estado) {
+
+        var response = service.listarTopicosPorEstado(estado, paginacion);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping
     @Transactional
     public ResponseEntity<DatosRespuestaTopico> actualizarTopico(@RequestBody @Valid DatosActualizarTopico datosActualizarTopico) {
 
-        Usuario autor = usuarioRepository.getReferenceById(datosActualizarTopico.autorId());
-        Curso curso = cursoRepository.getReferenceById(datosActualizarTopico.cursoId());
+        var response = service.actualizarTopico(datosActualizarTopico);
+        return ResponseEntity.ok(response);
 
-        Topico topico = topicoRepository.getReferenceById(datosActualizarTopico.id());
-        topico.actualizarDatos(datosActualizarTopico, autor, curso);
-
-        return ResponseEntity.ok(new DatosRespuestaTopico(topico));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<DatosRespuestaTopico> retornarDatosTopico(@PathVariable Long id) {
-        Topico topico = topicoRepository.getReferenceById(id);
-        var datosTopico = new DatosRespuestaTopico(topico);
-        return ResponseEntity.ok(datosTopico);
+        var response = service.retornarDatosTopico(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}+R")
+    public ResponseEntity retornarDatosTopicoConRespuestas(@PageableDefault(size = 10) Pageable paginacion,
+                                                           @PathVariable Long id){
+        var response = service.retornarDatosTopicoConRespuestas(id, paginacion);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity<Void> eliminarTopico(@PathVariable Long id){
-        Topico topico = topicoRepository.getReferenceById(id);
-        //topicoRepository.delete(topico);
-        topico.cerrarTopico();
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> eliminarTopico(@PathVariable Long id){
+        service.eliminarTopico(id);
+        return ResponseEntity.ok("tópico cerrado");
     }
 
 }

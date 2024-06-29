@@ -46,7 +46,6 @@ public class TopicoController {
 
         var response = service.registrarTopico(datosRegistroTopico);
         return ResponseEntity.ok(response);
-
     }
 
     @GetMapping
@@ -69,8 +68,8 @@ public class TopicoController {
     public ResponseEntity<DatosRespuestaTopico> actualizarTopico(@RequestBody @Valid DatosActualizarTopico datosActualizarTopico) {
 
         var response = service.actualizarTopico(datosActualizarTopico);
-        return ResponseEntity.ok(response);
 
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")

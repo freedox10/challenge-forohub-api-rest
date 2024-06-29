@@ -67,11 +67,6 @@ public class Topico {
 
     public void agregarRespuesta(Respuesta respuesta) {
         this.respuestas.add(respuesta);
-        if (respuesta.getSolucion()) {
-            this.estado = Estado.SOLUCIONADO;
-        } else {
-            this.estado = Estado.SIN_SOLUCION;
-        }
     }
 
 }

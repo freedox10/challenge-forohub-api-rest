@@ -10,9 +10,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.net.URI;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -20,35 +17,25 @@ import java.net.URI;
 public class UsuarioController {
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private UsuarioService service;
 
     @PostMapping
-    public ResponseEntity<DatosRespuestaUsuario> registrarUsuario(@RequestBody @Valid DatosRegistroUsuario datosRegistroUsuario,
-                                                                 UriComponentsBuilder uriComponentsBuilder) {
-        Usuario usuario = usuarioRepository.save(new Usuario(datosRegistroUsuario));
-
-        DatosRespuestaUsuario datosRespuestaUsuario = new DatosRespuestaUsuario(usuario);
-
-        URI url = uriComponentsBuilder.path("/usuarios/{id}").buildAndExpand(usuario.getId()).toUri();
-
-        return ResponseEntity.created(url).body(datosRespuestaUsuario);
-        // Return 201 Created
-        // URL donde encontrar al usuario
-        // GET http://localhost:8080/usuarios/xx
+    public ResponseEntity<DatosRespuestaUsuario> registrarUsuario(@RequestBody @Valid DatosRegistroUsuario datosRegistroUsuario) {
+        var response = service.registrarUsuario(datosRegistroUsuario);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
     public ResponseEntity<Page<DatosListadoUsuario>> listadoUsuarios(@PageableDefault(size = 10) Pageable paginacion) {
-        return ResponseEntity.ok(usuarioRepository.findAll(paginacion).map(DatosListadoUsuario::new));
-//        return ResponseEntity.ok(usuarioRepository.findByActivoTrue(paginacion).map(DatosListadoUsuario::new));
+        var response = service.listadoUsuarios(paginacion);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping
     @Transactional
     public ResponseEntity<DatosRespuestaUsuario> actualizarUsuario(@RequestBody @Valid DatosActualizarUsuario datosActualizarUsuario) {
-        Usuario usuario = usuarioRepository.getReferenceById(datosActualizarUsuario.id());
-        usuario.actualizarDatos(datosActualizarUsuario);
-        return ResponseEntity.ok(new DatosRespuestaUsuario(usuario));
+        var response = service.actualizarUsuario(datosActualizarUsuario);
+        return ResponseEntity.ok(response);
     }
 
 //    // DELETE Logico, no borra, lo setea como inactivo
@@ -63,16 +50,15 @@ public class UsuarioController {
     // DELETE en Base de Datos, borra registro definitivamente, no deseable en otros casos
     @DeleteMapping("/{id}")
     @Transactional
-    public void eliminarUsuario(@PathVariable Long id){
-        Usuario usuario = usuarioRepository.getReferenceById(id);
-        usuarioRepository.delete(usuario);
+    public ResponseEntity<String> eliminarUsuario(@PathVariable Long id){
+        service.eliminarUsuario(id);
+        return ResponseEntity.ok("usuario eliminado");
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<DatosRespuestaUsuario> retornarDatosUsuario(@PathVariable Long id) {
-        Usuario usuario = usuarioRepository.getReferenceById(id);
-        var datosUsuario = new DatosRespuestaUsuario(usuario);
-        return ResponseEntity.ok(datosUsuario);
+        var response = service.retornarDatosUsuario(id);
+        return ResponseEntity.ok(response);
     }
 
 }

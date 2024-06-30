@@ -1,11 +1,6 @@
 package com.aluracursos.forohub.controller;
 
-import com.aluracursos.forohub.domain.curso.Curso;
-import com.aluracursos.forohub.domain.curso.CursoRepository;
 import com.aluracursos.forohub.domain.respuesta.*;
-import com.aluracursos.forohub.domain.topico.*;
-import com.aluracursos.forohub.domain.usuario.Usuario;
-import com.aluracursos.forohub.domain.usuario.UsuarioRepository;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,21 +12,12 @@ import org.springframework.data.web.SortDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.net.URI;
 
 @RestController
 @RequestMapping("/respuestas")
-//@SecurityRequirement(name = "bearer-key")
+@SecurityRequirement(name = "bearer-key")
 public class RespuestaController {
 
-    @Autowired
-    private RespuestaRepository respuestaRepository;
-    @Autowired
-    private TopicoRepository topicoRepository;
-    @Autowired
-    private UsuarioRepository usuarioRepository;
     @Autowired
     private RespuestaService service;
 

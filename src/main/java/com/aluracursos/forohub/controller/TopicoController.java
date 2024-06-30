@@ -1,11 +1,7 @@
 package com.aluracursos.forohub.controller;
 
-import com.aluracursos.forohub.domain.curso.Curso;
-import com.aluracursos.forohub.domain.curso.CursoRepository;
 import com.aluracursos.forohub.domain.topico.*;
-import com.aluracursos.forohub.domain.usuario.*;
 import com.aluracursos.forohub.infra.errores.ValidacionDeIntegridad;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +13,6 @@ import org.springframework.data.web.SortDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.net.URI;
 
 @RestController
 @RequestMapping("/topicos")
@@ -27,21 +20,15 @@ import java.net.URI;
 public class TopicoController {
 
     @Autowired
-    private TopicoRepository topicoRepository;
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-    @Autowired
-    private CursoRepository cursoRepository;
-    @Autowired
     private TopicoService service;
 
     @PostMapping
     @Transactional
     //El @Operación la anotación se usa para describir una sola operación. Una operación es una combinación única de una ruta y un método HTTP.
-    @Operation(
-            summary = "registra un tópico",
-            description = "debe existir autor y curso",
-            tags = { "topico", "post" })
+//    @Operation(
+//            summary = "registra un tópico",
+//            description = "debe existir autor y curso",
+//            tags = { "topico", "post" })
     public ResponseEntity<DatosRespuestaTopico> registrarTopico(@RequestBody @Valid DatosRegistroTopico datosRegistroTopico) throws ValidacionDeIntegridad {
 
         var response = service.registrarTopico(datosRegistroTopico);

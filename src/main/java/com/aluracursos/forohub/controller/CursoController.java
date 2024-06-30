@@ -10,9 +10,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.net.URI;
 
 @RestController
 @RequestMapping("/cursos")
@@ -20,48 +17,38 @@ import java.net.URI;
 public class CursoController {
 
     @Autowired
-    private CursoRepository cursoRepository;
+    private CursoService service;
 
     @PostMapping
-    public ResponseEntity<DatosRespuestaCurso> registrarCurso(@RequestBody @Valid DatosRegistroCurso datosRegistroCurso,
-                                                              UriComponentsBuilder uriComponentsBuilder) {
-        Curso curso = cursoRepository.save(new Curso(datosRegistroCurso));
-
-        DatosRespuestaCurso datosRespuestaCurso = new DatosRespuestaCurso(curso);
-
-        URI url = uriComponentsBuilder.path("/cursos/{id}").buildAndExpand(curso.getId()).toUri();
-
-        return ResponseEntity.created(url).body(datosRespuestaCurso);
-        // Return 201 Created
-        // URL donde encontrar al curso
-        // GET http://localhost:8080/cursos/xx
+    public ResponseEntity<DatosRespuestaCurso> registrarCurso(@RequestBody @Valid DatosRegistroCurso datosRegistroCurso) {
+        var response = service.registrarCurso(datosRegistroCurso);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
     public ResponseEntity<Page<DatosListadoCurso>> listadoCurso(@PageableDefault(size = 10) Pageable paginacion) {
-        return ResponseEntity.ok(cursoRepository.findAll(paginacion).map(DatosListadoCurso::new));
+        var response = service.listadoCurso(paginacion);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<DatosRespuestaCurso> retornarDatosCurso(@PathVariable Long id) {
-        Curso curso = cursoRepository.getReferenceById(id);
-        var datosCurso = new DatosRespuestaCurso(curso);
-        return ResponseEntity.ok(datosCurso);
+        var response = service.retornarDatosCurso(id);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping
     @Transactional
     public ResponseEntity<DatosRespuestaCurso> actualizarCurso(@RequestBody @Valid DatosActualizarCurso datosActualizarCurso) {
-        Curso curso = cursoRepository.getReferenceById(datosActualizarCurso.id());
-        curso.actualizarDatos(datosActualizarCurso);
-        return ResponseEntity.ok(new DatosRespuestaCurso(curso));
+        var response = service.actualizarCurso(datosActualizarCurso);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
     @Transactional
-    public void eliminarCurso(@PathVariable Long id){
-        Curso curso = cursoRepository.getReferenceById(id);
-        cursoRepository.delete(curso);
+    public ResponseEntity<String> eliminarCurso(@PathVariable Long id){
+        service.eliminarCurso(id);
+        return ResponseEntity.ok("curso eliminado");
     }
 
 }

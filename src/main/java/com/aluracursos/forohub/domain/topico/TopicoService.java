@@ -27,7 +27,7 @@ public class TopicoService {
     @Autowired
     private RespuestaRepository respuestaRepository;
     @Autowired
-    private List<ValidadorRegistrarTopico> validadorRegistrarTopicos;
+    List<ValidadorRegistrarTopico> validadorRegistrarTopicos;
 
     public DatosRespuestaTopico registrarTopico(DatosRegistroTopico datosRegistroTopico){
 

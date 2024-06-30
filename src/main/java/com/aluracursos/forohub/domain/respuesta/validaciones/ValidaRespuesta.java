@@ -6,8 +6,10 @@ import com.aluracursos.forohub.domain.topico.TopicoRepository;
 import com.aluracursos.forohub.domain.usuario.UsuarioRepository;
 import com.aluracursos.forohub.infra.errores.ValidacionDeIntegridad;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-public class ValidaRespuesta implements ValidadorRespuesta {
+@Component
+public class ValidaRespuesta implements ValidadorRegistrarRespuesta {
 
     @Autowired
     private UsuarioRepository usuarioRepository;

@@ -51,6 +51,14 @@ public class RespuestaController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/solucion/{solucion}")
+    public ResponseEntity<Page<DatosListadoRespuesta>> listarRespuestasPorSolucion(
+            @PageableDefault(size = 10) Pageable paginacion, @PathVariable Boolean solucion) {
+
+        var response = service.listarRespuestasPorSolucion(solucion, paginacion);
+        return ResponseEntity.ok(response);
+    }
+
     @PutMapping
     @Transactional
     public ResponseEntity<DatosResponseRespuesta> actualizarRespuesta(@RequestBody @Valid DatosActualizarRespuesta datosActualizarRespuesta) {

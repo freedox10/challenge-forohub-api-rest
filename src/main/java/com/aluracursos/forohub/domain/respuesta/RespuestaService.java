@@ -1,28 +1,15 @@
 package com.aluracursos.forohub.domain.respuesta;
 
-import com.aluracursos.forohub.domain.respuesta.validaciones.ValidadorRespuesta;
-import com.aluracursos.forohub.domain.topico.DatosRespuestaTopico;
-import com.aluracursos.forohub.domain.topico.Estado;
-import com.aluracursos.forohub.domain.topico.Topico;
-import com.aluracursos.forohub.domain.topico.TopicoRepository;
+import com.aluracursos.forohub.domain.respuesta.validaciones.ValidadorRegistrarRespuesta;
+import com.aluracursos.forohub.domain.topico.*;
 import com.aluracursos.forohub.domain.usuario.Usuario;
 import com.aluracursos.forohub.domain.usuario.UsuarioRepository;
-import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.data.web.SortDefault;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 
 @Service
@@ -34,12 +21,13 @@ public class RespuestaService {
     private UsuarioRepository usuarioRepository;
     @Autowired
     private RespuestaRepository respuestaRepository;
+    @Autowired
+    List<ValidadorRegistrarRespuesta> validadorRegistrarRespuestas;
 
-    private List<ValidadorRespuesta> validadorRespuestas;
 
     public DatosResponseRespuesta registrarRespuesta(DatosRegistroRespuesta datosRegistroRespuesta) {
 
-        validadorRespuestas.forEach(v->v.validar(datosRegistroRespuesta));
+        validadorRegistrarRespuestas.forEach(v->v.validar(datosRegistroRespuesta));
 
         Topico topico = topicoRepository.getReferenceById(datosRegistroRespuesta.topicoId());
         Usuario autor = usuarioRepository.getReferenceById(datosRegistroRespuesta.autorId());
@@ -54,6 +42,14 @@ public class RespuestaService {
 
     public Page<DatosListadoRespuesta> listarRespuesta(Pageable paginacion) {
         return respuestaRepository.findAll(paginacion).map(DatosListadoRespuesta::new);
+    }
+
+    public Page<DatosListadoRespuesta> listarRespuestasPorSolucion(Boolean solucion, Pageable paginacion){
+        if (solucion.describeConstable().isEmpty()){
+            throw new ValidationException("solucion inexistente");
+        }
+
+        return respuestaRepository.findAllBySolucion(solucion, paginacion).map(DatosListadoRespuesta::new);
     }
 
     public DatosResponseRespuesta actualizarRespuesta(DatosActualizarRespuesta datosActualizarRespuesta) {

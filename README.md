@@ -98,26 +98,26 @@ Analizo los requisititos del Challenge, busco las herramientas necesarias, imple
 >2024-06-24
 >>_Creación modelo **Usuario**, funciones en services, controles (REST) como controllers, transferencias de datos como DTOs, repositorios como repository._
 >
->>2024-06-25
+>2024-06-25
 >>_Creación modelo **Curso**, funciones en services, controles (REST) como controllers, transferencias de datos como DTOs, repositorios como repository._
 >
 >>_Creación modelo **Tópico**, funciones en services, controles (REST) como controllers, transferencias de datos como DTOs, repositorios como repository, validaciones según reglas de negocio en entradas de datos e integridad._
 >
 >>_Trabaja función listar Tópico, se agrega funcionalidad mostrar tópico mas respuestas._
 >
->>2024-06-26
+>2024-06-26
 >>_Creación modelo **Respuesta**, funciones en services, controles (REST) como controllers, transferencias de datos como DTOs, repositorios como repository._
 >
->>2024-06-27
+>2024-06-27
 >>_Mejora funciones Tópico,  agrega función listar tópicos por estado, función eliminar solo lo marca como Estado.CERRADO._
 >
->>2024-06-28
+>2024-06-28
 >>_Mejora funciones Respuesta,  mejoras varias._
 >
->>2024-06-29
+>2024-06-29
 >>_Agrega función Respuesta,  agrega función listar respuestas por solución._
 >
->>2024-06-30
+>2024-06-30
 >>_Optimiza funciones, revisión y corrección integral de las mismas.
 Crea **Documentación** con swagger implementando springdoc-openAPI.
 Crea **Test** de comprobación del controlador de Tópico
